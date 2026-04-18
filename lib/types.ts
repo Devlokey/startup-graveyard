@@ -1,3 +1,4 @@
+// Must match CHECK constraint on startups.failure_tag column in 001_initial_schema.sql
 export type FailureTag = 'Overfunded' | 'Too Early' | 'Bad Product' | 'Market Shift'
 
 /** Full startup record — used in graveyard card grid */
