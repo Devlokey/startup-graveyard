@@ -8,7 +8,9 @@ export default defineConfig({
     alias: { '@': path.resolve(__dirname, '.') },
   },
   test: {
-    environment: 'jsdom',
+    // Default to node environment; component tests opt into jsdom via
+    // "// @vitest-environment jsdom" at the top of the test file.
+    environment: 'node',
     setupFiles: ['./vitest.setup.ts'],
     globals: true,
   },
