@@ -2,6 +2,7 @@ import { createServerClient } from '../lib/supabase'
 import HomepageClient from '../components/HomepageClient'
 import type { StartupParticle, StartupStats } from '../lib/types'
 
+export const dynamic = 'force-dynamic'
 export const revalidate = 3600
 
 export default async function HomePage() {

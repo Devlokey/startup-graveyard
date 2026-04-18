@@ -2,6 +2,7 @@ import { createServerClient } from '../../lib/supabase'
 import GraveyardGrid from '../../components/GraveyardGrid'
 import type { Startup } from '../../lib/types'
 
+export const dynamic = 'force-dynamic'
 export const revalidate = 3600
 
 export default async function GraveyardPage() {
@@ -30,7 +31,7 @@ export default async function GraveyardPage() {
     <div className="min-h-screen pt-24 pb-16 px-4 md:px-8 max-w-7xl mx-auto">
       <div className="mb-10">
         <h1 className="text-3xl font-bold neon-text mb-2">The Graveyard</h1>
-        <p className="text-gray-500 text-sm">Every Indian startup that didn't make it. Sorted by shutdown date.</p>
+        <p className="text-gray-500 text-sm">Every Indian startup that didn&apos;t make it. Sorted by shutdown date.</p>
       </div>
       <GraveyardGrid startups={startups} sectors={sectors} years={years} />
     </div>
