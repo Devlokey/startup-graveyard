@@ -31,7 +31,30 @@ export default function HomepageClient({ startups, stats }: HomepageClientProps)
       />
 
       <div className="relative z-20 flex flex-col items-center justify-center min-h-screen px-4 text-center">
-        <div className="mb-8 space-y-2">
+        {/* Mobile hero: big number stacked layout */}
+        <div className="md:hidden mb-6 text-center space-y-1">
+          <div
+            className="text-6xl font-extrabold leading-none tracking-tight"
+            data-testid="mobile-dead-count"
+          >
+            <LiveCounter value={stats.total_dead} className="neon-text" duration={2500} />
+          </div>
+          <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[rgba(200,180,255,0.45)]">
+            startups failed &amp; counting
+          </p>
+          <div
+            className="mt-3 text-[26px] font-bold leading-none text-white"
+            data-testid="mobile-burned-count"
+          >
+            <LiveCounter value={stats.total_burned_crore} prefix="₹" suffix=" Cr" duration={2500} />
+          </div>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-[rgba(200,180,255,0.35)]">
+            burned
+          </p>
+        </div>
+
+        {/* Desktop hero: existing layout — untouched */}
+        <div className="hidden md:block mb-8 space-y-2">
           <h1 className="text-4xl md:text-6xl font-bold leading-tight">
             <LiveCounter
               value={stats.total_dead}
