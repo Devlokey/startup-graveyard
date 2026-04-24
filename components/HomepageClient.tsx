@@ -32,7 +32,7 @@ export default function HomepageClient({ startups, stats }: HomepageClientProps)
 
       <div className="relative z-20 flex flex-col items-center justify-center min-h-screen px-4 text-center">
         {/* Mobile hero: big number stacked layout */}
-        <div className="md:hidden mb-6 text-center space-y-1">
+        <div className="md:hidden mb-6 space-y-1">
           <div
             className="text-6xl font-extrabold leading-none tracking-tight"
             data-testid="mobile-dead-count"
