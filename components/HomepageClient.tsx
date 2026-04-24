@@ -102,7 +102,7 @@ export default function HomepageClient({ startups, stats }: HomepageClientProps)
 
         <a
           href="/graveyard"
-          className="inline-flex items-center justify-center min-h-[44px] px-6 rounded-xl font-medium transition-colors bg-purple-900/20 border border-purple-500/25 text-purple-400 hover:bg-purple-900/30 hover:border-purple-400/40 sm:bg-transparent sm:border-0 sm:min-h-0 sm:rounded-none sm:px-0 sm:text-sm sm:text-gray-500 sm:hover:text-purple-300 sm:underline sm:underline-offset-4"
+          className="inline-flex items-center justify-center min-h-[44px] px-6 rounded-xl font-medium transition-colors bg-purple-900/20 border border-purple-500/25 text-purple-400 hover:bg-purple-900/30 hover:border-purple-400/40 sm:inline sm:min-h-0 sm:px-0 sm:rounded-none sm:font-normal sm:bg-transparent sm:border-0 sm:text-sm sm:text-gray-500 sm:hover:text-purple-300 sm:hover:bg-transparent sm:hover:border-0 sm:underline sm:underline-offset-4"
         >
           Browse all startups →
         </a>
