@@ -51,11 +51,11 @@ No changes to mouse hover behaviour on desktop.
 
 ### 3. Tag Pills — Larger Touch Targets
 
-Update `.tag-pill` in `globals.css` and the tag `<button>` elements in `HomepageClient.tsx`:
+Add size-override classes directly to the `<button>` elements in `HomepageClient.tsx`. Do **not** touch `globals.css` — `.tag-pill` is also used in `GraveyardGrid` and must stay small there.
 
-- Padding: `px-2 py-0.5` → `px-3 py-1.5` (gives ~32px height)
-- Add `min-h-[36px]` to the button to guarantee a minimum tap area.
-- Font size bumped from `text-xs` (12px) to `text-sm` (14px) — more readable at a glance.
+- Add `py-1.5 px-3 text-sm min-h-[36px]` alongside the existing `tag-pill` class on each button.
+- Tailwind utility classes (utilities layer) override `@apply` rules (components layer), so these win cleanly.
+- Result: ~32–36px tall pills, 14px text — comfortably tappable without changing graveyard behaviour.
 
 The activated (selected) style stays the same.
 
@@ -78,7 +78,7 @@ Replace the anchor tag styling from a faint underlined link to a proper outlined
 |------|--------|
 | `components/HomepageClient.tsx` | Restructure hero `<h1>` into stacked divs with mobile-specific Tailwind classes; update tag pill buttons; update browse link to button on mobile |
 | `components/ParticleField.tsx` | Add `touchstart` handler; add auto-dismiss timeout; add tap-hint label (hidden on `sm:`) |
-| `app/globals.css` | Bump `.tag-pill` padding and font-size |
+| `app/globals.css` | No changes — tag-pill size overrides go on the button elements directly |
 
 ---
 
