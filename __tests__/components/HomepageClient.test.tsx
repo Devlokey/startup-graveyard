@@ -21,4 +21,13 @@ describe('HomepageClient', () => {
     render(<HomepageClient startups={mockStartups} stats={mockStats} />)
     expect(screen.getByTestId('mobile-burned-count')).toBeInTheDocument()
   })
+
+  it('renders tag pill buttons with min-h-[36px] for touch targets', () => {
+    render(<HomepageClient startups={mockStartups} stats={mockStats} />)
+    const pills = screen.getAllByRole('button')
+    expect(pills.length).toBe(4) // Overfunded, Too Early, Bad Product, Market Shift
+    pills.forEach((pill) => {
+      expect(pill.className).toContain('min-h-[36px]')
+    })
+  })
 })

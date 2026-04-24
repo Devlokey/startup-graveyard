@@ -89,7 +89,7 @@ export default function HomepageClient({ startups, stats }: HomepageClientProps)
             <button
               key={tag}
               onClick={() => toggleTag(tag)}
-              className={`tag-pill cursor-pointer transition-all ${
+              className={`tag-pill py-1.5 px-3 text-sm min-h-[36px] cursor-pointer transition-all ${
                 activeTags.includes(tag)
                   ? 'bg-purple-600/40 border-purple-400/60 text-white'
                   : 'opacity-60 hover:opacity-100'
