@@ -30,4 +30,10 @@ describe('HomepageClient', () => {
       expect(pill.className).toContain('min-h-[36px]')
     })
   })
+
+  it('renders browse link with 44px min-height for iOS tap target', () => {
+    render(<HomepageClient startups={mockStartups} stats={mockStats} />)
+    const link = screen.getByRole('link', { name: /browse all startups/i })
+    expect(link.className).toContain('min-h-[44px]')
+  })
 })
