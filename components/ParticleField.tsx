@@ -26,6 +26,11 @@ interface ParticleFieldProps {
   activeTags: string[]
 }
 
+/** Exported for unit testing. Returns every 3rd startup on mobile to reduce particle density. */
+export function getMobileParticles(startups: StartupParticle[], isMobile: boolean): StartupParticle[] {
+  return isMobile ? startups.filter((_, i) => i % 3 === 0) : startups
+}
+
 export default function ParticleField({ startups, searchQuery, activeTags }: ParticleFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const particlesRef = useRef<Particle[]>([])
@@ -45,7 +50,9 @@ export default function ParticleField({ startups, searchQuery, activeTags }: Par
 
     const DEPTHS = [0.3, 0.6, 1.0]
 
-    particlesRef.current = startups.map((startup) => {
+    const mobileStartups = getMobileParticles(startups, window.innerWidth < 640)
+
+    particlesRef.current = mobileStartups.map((startup) => {
       const depth = DEPTHS[Math.floor(Math.random() * 3)]
       const fontSize = Math.round(10 + depth * 5)
       ctx.font = `${fontSize}px Inter, system-ui, sans-serif`
