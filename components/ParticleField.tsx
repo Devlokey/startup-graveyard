@@ -33,6 +33,7 @@ export default function ParticleField({ startups, searchQuery, activeTags }: Par
   const scrollRef = useRef(0)
   const animFrameRef = useRef<number>(0)
   const touchDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const touchActiveRef = useRef(false)
   const [tooltip, setTooltip] = useState<TooltipState | null>(null)
   const prevTooltipIdRef = useRef<string | null>(null)
 
@@ -154,9 +155,19 @@ export default function ParticleField({ startups, searchQuery, activeTags }: Par
       }
 
       const newId = pendingTooltip?.startup.id ?? null
-      if (newId !== prevTooltipIdRef.current) {
-        prevTooltipIdRef.current = newId
-        setTooltip(pendingTooltip)
+      if (newId !== null) {
+        // Mouse is hovering something — take over from any active touch
+        if (newId !== prevTooltipIdRef.current) {
+          prevTooltipIdRef.current = newId
+          touchActiveRef.current = false
+          setTooltip(pendingTooltip)
+        }
+      } else if (!touchActiveRef.current) {
+        // Nothing hovered and no touch active — clear tooltip
+        if (prevTooltipIdRef.current !== null) {
+          prevTooltipIdRef.current = null
+          setTooltip(null)
+        }
       }
       animFrameRef.current = requestAnimationFrame(draw)
     }
@@ -198,22 +209,25 @@ export default function ParticleField({ startups, searchQuery, activeTags }: Par
       if (closest) {
         if (touchDismissRef.current) clearTimeout(touchDismissRef.current)
         prevTooltipIdRef.current = closest.startup.id
+        touchActiveRef.current = true
         setTooltip(closest)
         touchDismissRef.current = setTimeout(() => {
           setTooltip(null)
           prevTooltipIdRef.current = null
+          touchActiveRef.current = false
         }, 2000)
       }
     }
 
-    canvas.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
 
     return () => {
       cancelAnimationFrame(animFrameRef.current)
       window.removeEventListener('resize', resize)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('scroll', onScroll)
-      canvas.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchstart', onTouchStart)
+      touchActiveRef.current = false
       if (touchDismissRef.current) clearTimeout(touchDismissRef.current)
     }
   }, [searchQuery, activeTags])
