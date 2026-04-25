@@ -32,6 +32,7 @@ export default function ParticleField({ startups, searchQuery, activeTags }: Par
   const mouseRef = useRef({ x: -9999, y: -9999 })
   const scrollRef = useRef(0)
   const animFrameRef = useRef<number>(0)
+  const touchDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [tooltip, setTooltip] = useState<TooltipState | null>(null)
   const prevTooltipIdRef = useRef<string | null>(null)
 
@@ -172,11 +173,48 @@ export default function ParticleField({ startups, searchQuery, activeTags }: Par
     window.addEventListener('mousemove', onMouseMove)
     window.addEventListener('scroll', onScroll)
 
+    const onTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0]
+      if (!touch) return
+      const tx = touch.clientX
+      const ty = touch.clientY
+      const scrollY = scrollRef.current
+
+      let closest: TooltipState | null = null
+      let closestDist = 40 // px radius — relaxed for fat-finger tolerance
+
+      for (const p of particlesRef.current) {
+        const parallaxOffset = scrollY * (1 - p.depth) * 0.4
+        const drawY = p.y - parallaxOffset
+        const dx = p.x - tx
+        const dy = drawY - ty
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        if (dist < closestDist) {
+          closestDist = dist
+          closest = { startup: p.startup, x: p.x, y: drawY }
+        }
+      }
+
+      if (closest) {
+        if (touchDismissRef.current) clearTimeout(touchDismissRef.current)
+        prevTooltipIdRef.current = closest.startup.id
+        setTooltip(closest)
+        touchDismissRef.current = setTimeout(() => {
+          setTooltip(null)
+          prevTooltipIdRef.current = null
+        }, 2000)
+      }
+    }
+
+    canvas.addEventListener('touchstart', onTouchStart, { passive: true })
+
     return () => {
       cancelAnimationFrame(animFrameRef.current)
       window.removeEventListener('resize', resize)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('scroll', onScroll)
+      canvas.removeEventListener('touchstart', onTouchStart)
+      if (touchDismissRef.current) clearTimeout(touchDismissRef.current)
     }
   }, [searchQuery, activeTags])
 
@@ -206,6 +244,13 @@ export default function ParticleField({ startups, searchQuery, activeTags }: Par
           </div>
         </div>
       )}
+      <p
+        data-testid="tap-hint"
+        className="fixed bottom-6 left-0 right-0 text-center text-[10px] text-purple-400/40 pointer-events-none sm:hidden"
+        style={{ zIndex: 100 }}
+      >
+        ✦ tap any name to see details
+      </p>
     </>
   )
 }
