@@ -119,6 +119,11 @@ export default function ParticleField({ startups, searchQuery, activeTags }: Par
         if (p.y < -100) p.y = canvas.height + 100
         if (p.y > canvas.height + 100) p.y = -100
 
+        // Mobile: skip render and hover for particles in the centre UI zone
+        if (canvas.width < 640 && drawY > canvas.height * 0.22 && drawY < canvas.height * 0.78) {
+          continue
+        }
+
         const tagMatch =
           activeTags.length === 0 ||
           (p.startup.failure_tag != null && activeTags.includes(p.startup.failure_tag))
@@ -204,6 +209,12 @@ export default function ParticleField({ startups, searchQuery, activeTags }: Par
       for (const p of particlesRef.current) {
         const parallaxOffset = scrollY * (1 - p.depth) * 0.4
         const drawY = p.y - parallaxOffset
+
+        // Skip particles in the mobile exclusion zone — they aren't visible
+        if (window.innerWidth < 640 && drawY > window.innerHeight * 0.22 && drawY < window.innerHeight * 0.78) {
+          continue
+        }
+
         const dx = p.x - tx
         const dy = drawY - ty
         const dist = Math.sqrt(dx * dx + dy * dy)
