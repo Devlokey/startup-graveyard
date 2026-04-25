@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import ParticleField from './ParticleField'
 import LiveCounter from './LiveCounter'
 import type { StartupParticle, StartupStats } from '../lib/types'
@@ -15,6 +16,7 @@ interface HomepageClientProps {
 export default function HomepageClient({ startups, stats }: HomepageClientProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTags, setActiveTags] = useState<string[]>([])
+  const router = useRouter()
 
   function toggleTag(tag: string) {
     setActiveTags((prev) =>
@@ -80,6 +82,11 @@ export default function HomepageClient({ startups, stats }: HomepageClientProps)
             placeholder="Search a startup name…"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && searchQuery.trim()) {
+                router.push(`/graveyard?search=${encodeURIComponent(searchQuery.trim())}`)
+              }
+            }}
             className="w-full px-4 py-3 rounded-xl glass-card text-white placeholder-gray-600 outline-none focus:border-purple-500 border border-transparent transition-colors text-sm"
           />
         </div>

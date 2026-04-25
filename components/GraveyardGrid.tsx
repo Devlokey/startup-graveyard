@@ -11,10 +11,11 @@ interface GraveyardGridProps {
   startups: Startup[]
   sectors: string[]
   years: number[]
+  initialSearch?: string
 }
 
-export default function GraveyardGrid({ startups, sectors, years }: GraveyardGridProps) {
-  const [search, setSearch] = useState('')
+export default function GraveyardGrid({ startups, sectors, years, initialSearch = '' }: GraveyardGridProps) {
+  const [search, setSearch] = useState(initialSearch)
   const [sector, setSector] = useState('')
   const [year, setYear] = useState('')
   const [tags, setTags] = useState<string[]>([])

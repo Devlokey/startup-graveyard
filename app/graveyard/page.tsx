@@ -5,7 +5,11 @@ import type { Startup } from '../../lib/types'
 export const dynamic = 'force-dynamic'
 export const revalidate = 3600
 
-export default async function GraveyardPage() {
+export default async function GraveyardPage({
+  searchParams,
+}: {
+  searchParams: { search?: string }
+}) {
   const supabase = createServerClient()
 
   const { data } = await supabase
@@ -33,7 +37,7 @@ export default async function GraveyardPage() {
         <h1 className="text-3xl font-bold neon-text mb-2">The Graveyard</h1>
         <p className="text-gray-500 text-sm">Every Indian startup that didn&apos;t make it. Sorted by shutdown date.</p>
       </div>
-      <GraveyardGrid startups={startups} sectors={sectors} years={years} />
+      <GraveyardGrid startups={startups} sectors={sectors} years={years} initialSearch={searchParams.search ?? ''} />
     </div>
   )
 }
