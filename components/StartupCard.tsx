@@ -17,7 +17,7 @@ function formatYear(dateStr: string | null): string {
 
 export default function StartupCard({ startup }: StartupCardProps) {
   return (
-    <div className="glass-card p-5 flex flex-col gap-3 hover:border-purple-500/30 transition-colors">
+    <div className="glass-card p-5 flex flex-col gap-3 hover:border-purple-500/50 hover:bg-purple-950/20 transition-colors cursor-pointer">
       <div className="flex items-start justify-between gap-2">
         <h3 className="font-semibold text-white text-base leading-tight">{startup.name}</h3>
         {startup.failure_tag && (

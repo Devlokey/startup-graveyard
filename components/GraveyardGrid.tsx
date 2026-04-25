@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import StartupCard from './StartupCard'
 import type { Startup } from '../lib/types'
 
@@ -14,12 +14,26 @@ interface GraveyardGridProps {
   initialSearch?: string
 }
 
+function formatFunding(lakhs: number | null): string {
+  if (!lakhs) return 'Undisclosed'
+  if (lakhs >= 100) return `₹${(lakhs / 100).toFixed(0)} Cr`
+  return `₹${lakhs}L`
+}
+
 export default function GraveyardGrid({ startups, sectors, years, initialSearch = '' }: GraveyardGridProps) {
   const [search, setSearch] = useState(initialSearch)
   const [sector, setSector] = useState('')
   const [year, setYear] = useState('')
   const [tags, setTags] = useState<string[]>([])
   const [page, setPage] = useState(1)
+  const [selected, setSelected] = useState<Startup | null>(null)
+
+  useEffect(() => {
+    if (!selected) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setSelected(null) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [selected])
 
   function toggleTag(tag: string) {
     setTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]))
@@ -87,7 +101,13 @@ export default function GraveyardGrid({ startups, sectors, years, initialSearch 
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {paginated.map((startup) => (
-            <StartupCard key={startup.id} startup={startup} />
+            <button
+              key={startup.id}
+              onClick={() => setSelected(startup)}
+              className="text-left w-full"
+            >
+              <StartupCard startup={startup} />
+            </button>
           ))}
         </div>
       )}
@@ -111,6 +131,61 @@ export default function GraveyardGrid({ startups, sectors, years, initialSearch 
           >
             Next →
           </button>
+        </div>
+      )}
+      {selected && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}
+          onClick={() => setSelected(null)}
+        >
+          <div
+            className="glass-card max-w-lg w-full p-6 flex flex-col gap-4 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelected(null)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors text-xl leading-none"
+              aria-label="Close"
+            >
+              ✕
+            </button>
+
+            <div className="flex items-start gap-3 pr-6">
+              <div>
+                <h2 className="text-xl font-bold text-white leading-tight">{selected.name}</h2>
+                {selected.sector && (
+                  <p className="text-purple-300 text-sm mt-0.5">{selected.sector}</p>
+                )}
+              </div>
+              {selected.failure_tag && (
+                <span className="tag-pill shrink-0 mt-0.5">{selected.failure_tag}</span>
+              )}
+            </div>
+
+            <div className="flex flex-wrap gap-4 text-sm text-gray-500">
+              <span>Founded: <span className="text-gray-300">{selected.founded_year ?? '?'}</span></span>
+              <span>Shut down: <span className="text-gray-300">{selected.shutdown_date?.slice(0, 7) ?? '?'}</span></span>
+              <span>Funding: <span className="text-gray-300">{formatFunding(selected.funding_inr)}</span></span>
+            </div>
+
+            {selected.reason ? (
+              <p className="text-gray-300 text-sm leading-relaxed">{selected.reason}</p>
+            ) : (
+              <p className="text-gray-600 text-sm italic">No summary available.</p>
+            )}
+
+            {selected.source_url && (
+              <a
+                href={selected.source_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-gray-600 hover:text-purple-400 transition-colors mt-auto"
+              >
+                via {selected.source_name ?? 'source'} ↗
+              </a>
+            )}
+          </div>
         </div>
       )}
     </div>
