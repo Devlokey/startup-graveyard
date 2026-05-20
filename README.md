@@ -5,6 +5,7 @@
 Live at → [startup-graveyard-mocha.vercel.app](https://startup-graveyard-mocha.vercel.app)
 
 258 startups. ₹78,116 Cr burned. And counting.
+<img width="1536" height="1024" alt="ChatGPT Image May 20, 2026, 05_59_31 PM" src="https://github.com/user-attachments/assets/20e72244-8197-4769-a566-e8ef7ac5926c" />
 
 ---
 
