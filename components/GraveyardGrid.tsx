@@ -22,6 +22,12 @@ function formatFunding(lakhs: number | null): string {
 
 export default function GraveyardGrid({ startups, sectors, years, initialSearch = '' }: GraveyardGridProps) {
   const [search, setSearch] = useState(initialSearch)
+
+  // On mount, pick up ?search= from the URL (works for both SSR and static export)
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get('search')
+    if (q) setSearch(q)
+  }, [])
   const [sector, setSector] = useState('')
   const [year, setYear] = useState('')
   const [tags, setTags] = useState<string[]>([])
